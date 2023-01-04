@@ -20,7 +20,7 @@ export async function getAllVersions() {
     "https://launchermeta.mojang.com/mc/game/version_manifest.json"
   );
 
-  return Object.keys(launcherManifest.data.versions);
+  return launcherManifest.data.versions;
 }
 
 export class MinecraftDownloader {
@@ -89,18 +89,27 @@ export class MinecraftDownloader {
     if (!libraryName) throw new Error("No library specified!");
 
     const library = this.versionManifest.libraries[libraryName];
+    let isNative = false; // Jank. (again)
+
+    if (library.downloads.classifiers) {
+      if (library.downloads.classifiers["natives-" + this.platform] || library.downloads.classifiers["natives-" + this.platform + "-x64"]) {
+        isNative = true;
+      }
+    }
 
     const downloadData = library.downloads.classifiers
       ? library.downloads.classifiers[
-          library.downloads.classifiers["natives-" + os]
-            ? "natives-" + os
-            : "natives-" + os + "-64"
+          library.downloads.classifiers["natives-" + this.platform]
+            ? "natives-" + this.platform
+            : "natives-" + this.platform + "-64"
         ]
       : library.downloads.artifact;
 
     return {
       data: library,
       downloadData: downloadData,
+
+      isNative: isNative
     };
   }
 

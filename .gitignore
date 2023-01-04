@@ -2,3 +2,5 @@ assets
 libraries
 *.jar
 *.json
+eagle_dl_all
+natives*
