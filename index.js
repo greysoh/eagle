@@ -1,11 +1,7 @@
 import * as eagle from "./src/mod.js";
 import { download } from "https://deno.land/x/download@v1.0.1/mod.ts";
 
-import os from "https://deno.land/x/dos@v0.11.0/mod.ts";
-
-const platform = os.platform() == "darwin" ? "osx" : os.platform();
 const mcVer = Deno.args[0] ? Deno.args[0] : "1.8.9";
-
 const mcdl = new eagle.MinecraftDownloader(mcVer);
 
 console.log("Fetching version data...");
