@@ -3,19 +3,22 @@ import * as eagle from "./src/mod.js";
 import { download } from "https://deno.land/x/download@v1.0.1/mod.ts";
 import { decompress } from "https://deno.land/x/zip@v1.2.3/mod.ts";
 
+import { exists } from "https://deno.land/std@0.170.0/fs/exists.ts";
+
 const vers = await eagle.getAllVersions();
 
 for (const mcVerData of vers.reverse()) {
-  const baseDir = `./eagle_dl_all/${mcVerData.type}/${mcVerData.id}/`;
+  const baseDir = `${Deno.args[0] ? Deno.args[0] : "./eagle_dl_all"}/${mcVerData.type}/${mcVerData.id}/`;
   const logPrefix = `[${mcVerData.type}](${mcVerData.id}) `;
+
+  console.log(logPrefix + "Fetching version data...");
+  if (await exists(baseDir)) continue;
 
   const mcVer = mcVerData.id;
 
   await Deno.mkdir(baseDir, { recursive: true });
   
   const mcdl = new eagle.MinecraftDownloader(mcVer);
-
-  console.log(logPrefix + "Fetching version data...");
 
   await mcdl.getData();
   const verManifestData = await mcdl.getManifest();

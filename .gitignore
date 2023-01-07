@@ -4,3 +4,7 @@ libraries
 *.json
 eagle_dl_all
 natives*
+
+dl_all.exe
+index.exe
+eagle.exe
