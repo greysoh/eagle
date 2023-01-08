@@ -23,6 +23,8 @@ for (const mcVerData of vers.reverse()) {
   await mcdl.getData();
   const verManifestData = await mcdl.getManifest();
 
+  await Deno.writeTextFile(baseDir + mcVer + ".json", verManifestData.data);
+
   console.log(logPrefix + "Downloading " + mcVer + " core...");
   await download(verManifestData.core, {
     file: mcVer + ".jar",
@@ -60,11 +62,6 @@ for (const mcVerData of vers.reverse()) {
   console.log("Downloading assets...");
 
   const assetIndex = await mcdl.getAssetIndex();
-  await Deno.writeTextFile(
-    baseDir + mcVer + ".json",
-    JSON.stringify(assetIndex.data)
-  );
-
   for (const j of Object.keys(assetIndex.data.objects)) {
     console.log(logPrefix + "Downloading '%s'...", j);
     const i = mcdl.getAsset(j);
@@ -78,4 +75,9 @@ for (const mcVerData of vers.reverse()) {
       dir: baseDir + "assets/" + pfData.path + "/",
     });
   }
+
+  await Deno.writeTextFile(
+    baseDir + "/assets/" + mcVer + ".json",
+    JSON.stringify(assetIndex.data)
+  );
 }
